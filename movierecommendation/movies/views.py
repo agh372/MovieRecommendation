@@ -8,6 +8,8 @@ from .models import Review, Movie
 from .forms import ReviewForm
 import datetime
 
+from django.contrib.auth.decorators import login_required
+
 
 def review_list(request):
     latest_review_list = Review.objects.order_by('-pub_date')[:9]
@@ -45,3 +47,16 @@ def add_review(request, movie_id):
         return HttpResponseRedirect(reverse('movies:movie_detail', args=(movie.id,)))
 
     return render(request, 'movies/movie_detail.html', {'movie': movie, 'form': form})
+
+
+def user_review_list(request, username=None):
+    if not username:
+        username = request.user.username
+    latest_review_list = Review.objects.filter(user_name=username).order_by('-pub_date')
+    context = {'latest_review_list':latest_review_list, 'username':username}
+    return render(request, 'movies/user_review_list.html', context)
+
+
+@login_required
+def user_recommendation_list(request):
+    return 0
