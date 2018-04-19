@@ -60,7 +60,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'movierecommendation.urls'
 
 LOGIN_REDIRECT_URL = '/movies/movie/user'
-LOGIN_REDIRECT_URL = '/movies'
 
 TEMPLATES = [
     {

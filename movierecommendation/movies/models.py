@@ -7,7 +7,6 @@ import numpy as np
 
 
 class Movie(models.Model):
-    movie_id = models.IntegerField()
     name = models.CharField(max_length=200)
     genre = models.CharField(max_length=200)
 
@@ -29,14 +28,10 @@ class Review(models.Model):
     )
     movie = models.ForeignKey(Movie)
     pub_date = models.DateTimeField('date published')
-    user_id = models.IntegerField(max_length=100)  
+    user_name = models.CharField(max_length=100)  
+    gender = models.CharField(max_length=100)  
     rating = models.IntegerField(choices=RATING_CHOICES)
-
-class Tags(models.Model):
-    movie = models.ForeignKey(Movie)
-    pub_date = models.DateTimeField('date published')
-    user_id = models.IntegerField(max_length=100)  
-    tags = models.CharField(max_length=100)
+    age = models.IntegerField()
 
 class Cluster(models.Model):
     name = models.CharField(max_length=100)

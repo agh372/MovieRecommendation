@@ -7,8 +7,8 @@ from .models import Movie, Review
 
 class ReviewAdmin(admin.ModelAdmin):
     model = Review
-    list_display = ('movie', 'rating', 'user_id', 'pub_date')
-    list_filter = ['pub_date', 'user_id']
+    list_display = ('movie', 'rating', 'user_name', 'pub_date')
+    list_filter = ['pub_date', 'user_name']
     search_fields = ['comment']
     
 admin.site.register(Movie)
