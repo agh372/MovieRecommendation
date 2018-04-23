@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from .models import Review, Movie
 from .forms import ReviewForm
+from django.core.paginator import Paginator
 import datetime
 
 from django.contrib.auth.decorators import login_required
@@ -22,10 +23,51 @@ def review_detail(request, review_id):
     return render(request, 'movies/review_detail.html', {'review': review})
 
 
+# def movie_list(request):
+#     movie_list = Movie.objects.order_by('-name')
+#     print "There are {} movies".format(Movie.objects.count())
+#     paginator = Paginator(movie_list, 21)
+#     queryset = paginator.page(1)
+#     context = {'movie_list':queryset}
+#     return render(request, 'movies/movie_list.html', context)
+
+
 def movie_list(request):
-    movie_list = Movie.objects.order_by('-name')
-    context = {'movie_list':movie_list}
-    return render(request, 'movies/movie_list.html', context)
+    current_page = request.GET.get('page' ,'1')
+    current_page =int(current_page)
+    limit = (21 * current_page)
+    offset = (limit - 21)
+    movie_list = Movie.objects.order_by('-name')[offset:limit]  # limiting movies based on current_page
+    total_movies = Movie.objects.all().count()  
+    total_pages = total_movies / 21
+    if total_movies % 21 != 0:
+        total_pages += 1 # adding one more page if the last page will contains less movies 
+        pagination_string = make_pagination_html(current_page, total_pages)
+    return render(request, 'movies/movie_list.html', {'movie_list': movie_list, 'pagination': pagination_string})
+
+ 
+
+def make_pagination_html(current_page, total_pages):
+    count_limit = 30
+    current_page = int(current_page)
+    pagination_string = ""
+    if current_page > 1:
+        pagination_string += '<a href="?page=%s">←</a>' % (current_page -1)
+    pagination_string += "<li class='active'><a href='?page=%s' >%s</a></li>"  % (current_page, current_page)
+    count = 1
+    value = current_page - 1
+    while value > 0 and count_limit < 5:
+        pagination_string = "<li><a href='?page=%s'>%s</a></li>" % (value, value) + pagination_string
+        value -= 1
+        count_limit += 1
+    value = current_page + 1
+    while value < total_pages and count_limit < 10:
+        pagination_string =  pagination_string +"<li><a href='?page=%s'>%s</a></li>" % (value, value)
+        value += 1
+        count_limit +=1
+    if current_page < total_pages:
+        pagination_string += '<a href="?page=%s">→</a>' % (current_page + 1)
+    return pagination_string
 
 
 def movie_detail(request, wine_id):

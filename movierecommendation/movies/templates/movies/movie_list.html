@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-{% if wine_list %}
+{% if movie_list %}
 <div class="row">
     {% for movie in movie_list %}
     <div class="col-xs-6 col-lg-4">
@@ -16,8 +16,14 @@
         <h5>{{ movie.average_rating | floatformat }} average rating</h5>
     </div>
     {% endfor %}
+    <div class="pagination">
+    <span class="step-links">
+      {{pagination|safe}}
+   </span>
+</div>
 </div>
 {% else %}
     <p>No movies are available.</p>
+
 {% endif %}
 {% endblock %}
