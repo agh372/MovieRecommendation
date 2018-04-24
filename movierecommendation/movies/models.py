@@ -29,9 +29,7 @@ class Review(models.Model):
     movie = models.ForeignKey(Movie)
     pub_date = models.DateTimeField('date published')
     user_name = models.CharField(max_length=100)  
-    gender = models.CharField(max_length=100)  
     rating = models.IntegerField(choices=RATING_CHOICES)
-    age = models.IntegerField()
 
 class Cluster(models.Model):
     name = models.CharField(max_length=100)

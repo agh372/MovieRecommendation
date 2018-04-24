@@ -9,13 +9,36 @@
 <div class="row">
     {% for review in latest_review_list %}
     <div class="col-xs-6 col-lg-4">
-        <h4><a href="{% url 'movies:review_detail' review.id %}">
+        <h4>
         {{ review.movie.name }}
-        </a></h4>
-        <h6>Rated {{ review.rating }} of 5 by <a href="{% url 'movies:user_review_list' review.name %}" >{{ review.name }}</a></h6>
+        </h4>
+        <h6>Rated {{ review.rating }} of 5 by {{ review.name }}</h6>
     </div>
     {% endfor %}
 </div>
+
+
+{% if latest_review_list.has_other_pages %}
+  <ul class="pagination">
+    {% if latest_review_list.has_previous %}
+      <li><a href="?page={{ latest_review_list.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in latest_review_list.paginator.page_range %}
+      {% if latest_review_list.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if latest_review_list.has_next %}
+      <li><a href="?page={{ latest_review_list.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
 {% else %}
 <p>No reviews are available.</p>
 {% endif %}

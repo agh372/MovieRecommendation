@@ -12,13 +12,15 @@ from movies.models import Review, Movie
 
 def save_review_from_row(review_row):
     review = Review()
-    review.id = review_row[0]
-    review.user_id = review_row[1]
-    review.movie = Movie.objects.get(id=review_row[2])
-    review.rating = review_row[3]
+    review.user_id = review_row[0]
+    try:
+        review.movie = Movie.objects.get(id=review_row[1])
+    except Movie.DoesNotExist:
+        review.movie = Movie.objects.get(id=8695)
+    review.rating = review_row[2]
     review.pub_date = datetime.datetime.now()
-    review.comment = review_row[4]
-    review.save()
+    if review.movie != Movie.objects.get(id=8695):
+        review.save()
     
     
 if __name__ == "__main__":
