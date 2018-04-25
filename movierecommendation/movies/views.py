@@ -45,24 +45,26 @@ def movie_list(request):
     return render(request, 'movies/movie_list.html', context)
 
 
-def movie_detail(request, wine_id):
+def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
     return render(request, 'movies/movie_detail.html', {'movie': movie})
 
+
+@login_required
 def add_review(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
-    form = ReviewForm(request.POST)
+    if request.POST:
+        form = ReviewForm(request.POST)
+    else:
+        form = ReviewForm()  
     if form.is_valid():
-        rating = form.cleaned_data['rating']
-        user_name = form.cleaned_data['user_name']
-        review = Review()
+        user_name = request.user.username
+        review = form.save(commit=False) # commit = False means that this instantiate but not save a Review model object
         review.movie = movie
-        review.user_name = user_name
-        review.rating = rating
-        review.pub_date = datetime.datetime.now()
-        review.save()
-        return HttpResponseRedirect(reverse('movies:movie_detail', args=(movie.id,)))
-
+        review.user_name = user_name # Why use this instead of a ForeignKey to user?
+        review.pub_date = datetime.datetime.now() # works as long as pub_date is a DateTimeField
+        review.save() # save to the DB now
+        return HttpResponseRedirect(reverse('movies:movie_detail', args=(movie.id,))) # THIS will redirect only upon form save
     return render(request, 'movies/movie_detail.html', {'movie': movie, 'form': form})
 
 

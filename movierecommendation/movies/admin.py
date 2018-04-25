@@ -14,3 +14,4 @@ class ReviewAdmin(admin.ModelAdmin):
 admin.site.register(Movie)
 admin.site.register(Review, ReviewAdmin)
 
+#href="{% url 'movies:user_review_list' review.user_name %}"
