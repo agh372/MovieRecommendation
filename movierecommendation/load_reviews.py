@@ -12,7 +12,7 @@ from movies.models import Review, Movie
 
 def save_review_from_row(review_row):
     review = Review()
-    review.user_id = review_row[0]
+    review.user_name = review_row[0]
     try:
         review.movie = Movie.objects.get(id=review_row[1])
     except Movie.DoesNotExist:
