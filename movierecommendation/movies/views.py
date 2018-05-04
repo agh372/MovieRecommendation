@@ -32,7 +32,7 @@ def review_detail(request, review_id):
 
 
 def movie_list(request):
-    #for x in Review.objects.all().iterator(): x.delete()     
+    for x in Review.objects.all().iterator(): x.delete()     
     movie_list = Movie.objects.order_by('-name').all()
     page = request.GET.get('page', 1)
     paginator = Paginator(movie_list, 84)
